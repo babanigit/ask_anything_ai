@@ -23,8 +23,12 @@ def ask_openai(prompt):
     return response.choices[0].message.content
 
 
-OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
+OPENROUTER_URL = settings.OPENROUTER_URL
 MODEL = settings.OPENROUTER_MODEL
+
+CHAT_HISTORY = []
+MAX_HISTORY = 10
+PAYLOAD_MESSAGE_LENGTH =0
 
 def ask_openai2(prompt):
     # logger, handler = get_request_logger()
@@ -33,18 +37,17 @@ def ask_openai2(prompt):
         "Authorization": f"Bearer {settings.OPENROUTER_API_KEY}",
         "Content-Type": "application/json",
     }
+ 
+    CHAT_HISTORY.append({"role": "user", "content": prompt})
+    
+    print(f"Current chat history: {CHAT_HISTORY}")  # Debugging line to check chat history
+    system_prompt =  CHAT_HISTORY[0]["content"] + " and my name is Aniket, age 23, software developer" if CHAT_HISTORY else "User: Aniket. Full-stack dev. Works with Django, Docker, AI APIs."  # Use the first message as system prompt or default
 
     payload = {
         "model": MODEL,
         "messages": [
-            {
-                "role": "system",
-                "content": "You are a senior software engineer helping developers."
-            },
-            {
-                "role": "user",
-                "content": prompt
-            }
+            {"role": "system", "content": system_prompt},
+            *CHAT_HISTORY[-MAX_HISTORY:]
         ]
     }
     
@@ -54,7 +57,7 @@ def ask_openai2(prompt):
         response = requests.post(
             OPENROUTER_URL,
             headers=headers,
-            json=payload,     # ✅ let requests handle JSON
+            json=payload, # let requests handle JSON
             timeout=30
         )
         
@@ -62,8 +65,12 @@ def ask_openai2(prompt):
         # logger.info("RESPONSE BODY: %s", response.text.strip())
             
         response.raise_for_status()
+        reply_content = response.json()["choices"][0]["message"]["content"]
+        CHAT_HISTORY.append({"role": "assistant", "content": reply_content})
+        
+        PAYLOAD_MESSAGE_LENGTH = len(payload["messages"])
 
-        return response.json()["choices"][0]["message"]["content"]
+        return reply_content, json.dumps(payload), PAYLOAD_MESSAGE_LENGTH, CHAT_HISTORY
 
     except Exception as e:
         print("bab exception: ", e)

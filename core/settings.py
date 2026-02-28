@@ -21,6 +21,10 @@ OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 if not OPENROUTER_API_KEY:
     raise RuntimeError("OPENROUTER_API_KEY is not set")
 
+OPENROUTER_URL = os.getenv("OPENROUTER_URL")
+if not OPENROUTER_URL:
+    raise RuntimeError("OPENROUTER_URL is not set")
+
 OPENROUTER_MODEL = os.getenv("OPENROUTER_MODEL")
 if not OPENROUTER_MODEL:
     raise RuntimeError("OPENROUTER_MODEL is not set")

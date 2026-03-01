@@ -15,6 +15,9 @@ from pathlib import Path
 from dotenv import load_dotenv
 import os
 
+from corsheaders.defaults import default_headers
+
+
 load_dotenv()  # 👈 this line is critical
 
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
@@ -66,6 +69,28 @@ ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000",
+#     "https://ask-ai-flax.vercel.app",
+# ]
+CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'content-type',
+    'authorization',
+]
+
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+
+
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -74,12 +99,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
-        'api',
-        'ai'
+    'api',
+    'ai',
+        
+    'corsheaders'
 
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+        
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

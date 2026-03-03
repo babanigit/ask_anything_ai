@@ -28,5 +28,5 @@
 #         - tip 2
 #     """
     
-def build_dev_prompt(language, intent, user_input):
+def build_dev_prompt(user_input):
     return user_input

@@ -1,26 +1,26 @@
 import json
-from urllib import request
-from openai import OpenAI
+# from urllib import request
+# from openai import OpenAI
 from django.conf import settings
 import requests
 
 # from functions.my_logger import get_request_logger
 
 
-client = OpenAI(api_key="key_")
+# client = OpenAI(api_key="key_")
 
 
-def ask_openai(prompt):
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[
-            {"role": "system", "content": "You are a helpful senior developer."},
-            {"role": "user", "content": prompt},
-        ],
-        temperature=0.3,
-    )
+# def ask_openai(prompt):
+#     response = client.chat.completions.create(
+#         model="gpt-4o-mini",
+#         messages=[
+#             {"role": "system", "content": "You are a helpful senior developer."},
+#             {"role": "user", "content": prompt},
+#         ],
+#         temperature=0.3,
+#     )
 
-    return response.choices[0].message.content
+#     return response.choices[0].message.content
 
 
 OPENROUTER_URL = settings.OPENROUTER_URL
@@ -40,7 +40,7 @@ def ask_openai2(prompt):
  
     CHAT_HISTORY.append({"role": "user", "content": prompt})
     
-    print(f"Current chat history: {CHAT_HISTORY}")  # Debugging line to check chat history
+    # print(f"Current chat history: {CHAT_HISTORY}")  # Debugging line to check chat history
     system_prompt =  CHAT_HISTORY[0]["content"] + " and my name is Aniket, age 23, software developer" if CHAT_HISTORY else "User: Aniket. Full-stack dev. Works with Django, Docker, AI APIs."  # Use the first message as system prompt or default
 
     payload = {

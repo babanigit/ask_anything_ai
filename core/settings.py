@@ -101,8 +101,9 @@ INSTALLED_APPS = [
     
     'api',
     'ai',
+    'personalPortfolio',
         
-    'corsheaders'
+    'corsheaders',
 
 ]
 

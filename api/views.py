@@ -1,3 +1,5 @@
+# import time
+
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -5,9 +7,11 @@ import json
 @csrf_exempt
 def test_api(request):
     if request.method == "GET":
+        # time.sleep(5)   # 5 seconds
+
         return JsonResponse({
-            "status": "success",
-            "message": "GET API working 🚀"
+            "status": True,
+            "message": "Success"
         })
 
     if request.method == "POST":

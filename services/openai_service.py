@@ -26,11 +26,11 @@ import requests
 OPENROUTER_URL = settings.OPENROUTER_URL
 MODEL = settings.OPENROUTER_MODEL
 
-CHAT_HISTORY = []
 MAX_HISTORY = 10
-PAYLOAD_MESSAGE_LENGTH =0
 
-def ask_openai2(prompt):
+def ask_openai2(prompt, history=None):
+    if history is None:
+        history = []
     # logger, handler = get_request_logger()
 
     headers = {
@@ -38,16 +38,16 @@ def ask_openai2(prompt):
         "Content-Type": "application/json",
     }
  
-    CHAT_HISTORY.append({"role": "user", "content": prompt})
+    history.append({"role": "user", "content": prompt})
     
-    # print(f"Current chat history: {CHAT_HISTORY}")  # Debugging line to check chat history
-    system_prompt =  CHAT_HISTORY[0]["content"] + " and my name is Aniket, age 23, software developer" if CHAT_HISTORY else "User: Aniket. Full-stack dev. Works with Django, Docker, AI APIs."  # Use the first message as system prompt or default
+    # print(f"Current chat history: {history}")  # Debugging line to check chat history
+    system_prompt =  history[0]["content"] + " and my name is Aniket, age 23, software developer" if history else "User: Aniket. Full-stack dev. Works with Django, Docker, AI APIs."  # Use the first message as system prompt or default
 
     payload = {
         "model": MODEL,
         "messages": [
             {"role": "system", "content": system_prompt},
-            *CHAT_HISTORY[-MAX_HISTORY:]
+            *history[-MAX_HISTORY:]
         ]
     }
     
@@ -66,11 +66,11 @@ def ask_openai2(prompt):
             
         response.raise_for_status()
         reply_content = response.json()["choices"][0]["message"]["content"]
-        CHAT_HISTORY.append({"role": "assistant", "content": reply_content})
+        history.append({"role": "assistant", "content": reply_content})
         
-        PAYLOAD_MESSAGE_LENGTH = len(payload["messages"])
+        payload_message_length = len(payload["messages"])
 
-        return reply_content, json.dumps(payload), PAYLOAD_MESSAGE_LENGTH, CHAT_HISTORY
+        return reply_content, json.dumps(payload), payload_message_length, history
 
     except Exception as e:
         print("bab exception: ", e)
@@ -82,4 +82,5 @@ def ask_openai2(prompt):
         # 🔴 IMPORTANT: prevent handler leak
         # logger.removeHandler(handler)
         # handler.close()
+
 

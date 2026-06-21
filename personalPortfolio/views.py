@@ -16,13 +16,19 @@ def pp_view(request):
             }, status=405)
     body = json.loads(request.body)
     user_input = body.get("input")
+    history = body.get("history")
+
     if not user_input:
-        
         return JsonResponse({
             "success": False,
             "message": "No input provided"
         }, status=400)
         
+    if history is not None and not isinstance(history, list):
+        return JsonResponse({
+            "success": False,
+            "message": "History must be a list of message objects"
+        }, status=400)
         
     # get prompts -- user and system
     user_prompt = pp_build_dev_prompt(user_input)
@@ -39,7 +45,7 @@ def pp_view(request):
         }, status=500)
         
     try:
-        ai_response, payload, PAYLOAD_MESSAGE_LENGTH, CHAT_HISTORY = pp_ask_ai_service(user_prompt, system_prompt, portfolio_data) #get service 
+        ai_response, payload, payload_message_length, updated_history = pp_ask_ai_service(user_prompt, system_prompt, portfolio_data, history) #get service 
     except Exception as e:
         return JsonResponse({
             "success": False,
@@ -51,7 +57,8 @@ def pp_view(request):
         "success": True,
         "message": ai_response,
         "payload_for_ref": payload,
-        "payload_message_length_for_ref": PAYLOAD_MESSAGE_LENGTH,
-        "total_chat_history_for_ref": CHAT_HISTORY
+        "payload_message_length_for_ref": payload_message_length,
+        "total_chat_history_for_ref": updated_history
     },status=200)
+
 

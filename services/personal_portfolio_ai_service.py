@@ -5,35 +5,32 @@ import requests
 OPENROUTER_URL = settings.OPENROUTER_URL
 MODEL = settings.OPENROUTER_MODEL
 
-CHAT_HISTORY = []
 MAX_HISTORY = 10
-PAYLOAD_MESSAGE_LENGTH =0
 
-def pp_ask_ai_service(user_question, system_prompt, portfolio_data):
+def pp_ask_ai_service(user_question, system_prompt, portfolio_data, history=None):
+    if history is None:
+        history = []
 
     headers = {
         "Authorization": f"Bearer {settings.OPENROUTER_API_KEY}",
         "Content-Type": "application/json",
     }
  
-    CHAT_HISTORY.append({"role": "user", "content": user_question})
+    history.append({"role": "user", "content": user_question})
     
     payload = {
         "model": MODEL,
         "messages": [
             {"role": "system", "content": system_prompt},
-            # *CHAT_HISTORY[-MAX_HISTORY:]
             {"role": "system", "content": f"Portfolio Data (JSON): {json.dumps(portfolio_data)}"},
-                        *CHAT_HISTORY[-MAX_HISTORY:]
-
-            # {"role": "user", "content": user_question}
+            *history[-MAX_HISTORY:]
         ]
     }
     
     try:
 
         response = requests.post(
-            OPENROUTER_URL,
+            str(OPENROUTER_URL),
             headers=headers,
             json=payload, # let requests handle JSON
             timeout=30
@@ -41,14 +38,12 @@ def pp_ask_ai_service(user_question, system_prompt, portfolio_data):
 
         response.raise_for_status()
         reply_content = response.json()["choices"][0]["message"]["content"]
-        CHAT_HISTORY.append({"role": "assistant", "content": reply_content})
+        history.append({"role": "assistant", "content": reply_content})
         
-        PAYLOAD_MESSAGE_LENGTH = len(payload["messages"])
+        payload_message_length = len(payload["messages"])
 
-        return reply_content, json.dumps(payload), PAYLOAD_MESSAGE_LENGTH, CHAT_HISTORY
+        return reply_content, json.dumps(payload), payload_message_length, history
 
     except Exception as e:
         raise e
-    
-    # finally:
-    #     print("hello aniket into final")
+

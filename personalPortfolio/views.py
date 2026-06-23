@@ -18,6 +18,10 @@ def pp_view(request):
     user_input = body.get("input")
     history = body.get("history")
 
+    print("body from frontend :- ", body)
+
+    history = json.loads(history)
+
     if not user_input:
         return JsonResponse({
             "success": False,
@@ -56,9 +60,9 @@ def pp_view(request):
     return JsonResponse({
         "success": True,
         "message": ai_response,
-        "payload_for_ref": payload,
-        "payload_message_length_for_ref": payload_message_length,
-        "total_chat_history_for_ref": updated_history
+        # "payload_for_ref": payload,
+        # "payload_message_length_for_ref": payload_message_length,
+        "history": updated_history
     },status=200)
 
 

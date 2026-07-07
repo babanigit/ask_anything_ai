@@ -15,12 +15,11 @@ def pp_view(request):
                 "message": "POST only"
             }, status=405)
     body = json.loads(request.body)
+    
     user_input = body.get("input")
-    history = body.get("history")
+    history_str = body.get("history")
 
-    print("body from frontend :- ", body)
-
-    history = json.loads(history)
+    history_json = json.loads(history_str)
 
     if not user_input:
         return JsonResponse({
@@ -28,7 +27,7 @@ def pp_view(request):
             "message": "No input provided"
         }, status=400)
         
-    if history is not None and not isinstance(history, list):
+    if history_json is not None and not isinstance(history_json, list):
         return JsonResponse({
             "success": False,
             "message": "History must be a list of message objects"
@@ -40,7 +39,7 @@ def pp_view(request):
         
     try:
         # load portfolio data
-        portfolio_data = pp_gist_data()
+        portfolio_data, model_name = pp_gist_data()
         
     except Exception as e:
         return JsonResponse({
@@ -49,20 +48,19 @@ def pp_view(request):
         }, status=500)
         
     try:
-        ai_response, payload, payload_message_length, updated_history = pp_ask_ai_service(user_prompt, system_prompt, portfolio_data, history) #get service 
+        response_message, response_history = pp_ask_ai_service(user_prompt, system_prompt, portfolio_data, history_json, model_name) #get service 
     except Exception as e:
         return JsonResponse({
             "success": False,
             "message": f"Failed to fetch ai response: {str(e)}"
-        }, status=500)
+        }, status=500) 
         
-    
+    print("RESPONSE SENDED...")
     return JsonResponse({
         "success": True,
-        "message": ai_response,
-        # "payload_for_ref": payload,
-        # "payload_message_length_for_ref": payload_message_length,
-        "history": updated_history
+        "message": response_message,
+        "history": response_history
+
     },status=200)
 
 

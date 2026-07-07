@@ -42,8 +42,6 @@ def ask_ai(request):
             "message": "History must be a list of message objects"
         }, status=400)
         
-    # print(f"Received request: language={language}, intent={intent}, input={user_input}")
-
     prompt = build_dev_prompt(language, intent, user_input) #create prompt
     
     try:

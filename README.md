@@ -142,7 +142,8 @@ OPENROUTER_MODEL="nvidia/nemotron-3-super-120b-a12b:free" # or any other model
   {
     "language": "python",
     "intent": "Explain list comprehension",
-    "input": "How can I filter even numbers from a list in Python?"
+    "input": "How can I filter even numbers from a list in Python?",
+    "history": []
   }
   ```
 - **Response**:
@@ -150,9 +151,14 @@ OPENROUTER_MODEL="nvidia/nemotron-3-super-120b-a12b:free" # or any other model
   {
     "success": true,
     "message_ai_response": "Explanation:\nList comprehension allows you to filter and transform lists concisely.\n\nCode:\n```python\nevens = [x for x in numbers if x % 2 == 0]\n```\n\nTips:\n- Use for simple transformations only.\n- Use generator expressions for large data sets.",
-    "payload_for_ref": "{...}",
+    "payload_for_ref": "{\"model\": \"nvidia/nemotron-3-super-120b-a12b:free\", ...}",
     "payload_message_length_for_ref": 3,
-    "total_chat_history_for_ref": [...]
+    "total_chat_history_for_ref": [
+      {
+        "role": "user",
+        "content": "..."
+      }
+    ]
   }
   ````
 
@@ -165,7 +171,8 @@ OPENROUTER_MODEL="nvidia/nemotron-3-super-120b-a12b:free" # or any other model
 - **Request Body**:
   ```json
   {
-    "input": "What projects has Aniket built?"
+    "input": "What projects has Aniket built?",
+    "history": "[]"
   }
   ```
 - **Response**:
@@ -173,9 +180,7 @@ OPENROUTER_MODEL="nvidia/nemotron-3-super-120b-a12b:free" # or any other model
   {
     "success": true,
     "message": "Aniket has built several projects, including:\n1. **Finshark**: A real-time stock tracking platform built using ASP.NET Core, React.js, TypeScript, PostgreSQL, and Docker.\n2. **Multiplayer Tic-Tac-Toe**: A real-time game platform built using TypeScript, Node.js, Express, MongoDB, and React.",
-    "payload_for_ref": "{...}",
-    "payload_message_length_for_ref": 3,
-    "total_chat_history_for_ref": [...]
+    "history": "[{\"role\": \"user\", \"content\": \"What projects has Aniket built?\"}, {\"role\": \"assistant\", \"content\": \"Aniket has built several projects...\"}]"
   }
   ```
 

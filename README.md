@@ -1,16 +1,17 @@
 # Ask Anything AI - Django Backend
 
-A lightweight, high-performance, and containerized Django-based REST API serving as the AI assistant backend for [Aniket Panchal's Portfolio Website](https://pixelify-porfolio-ts-git-main-aniket-panchals-projects.vercel.app). It integrates with OpenRouter to power both a context-restricted portfolio chatbot and a general developer assistant.
+A lightweight, high-performance, and containerized Django-based REST API serving as the AI assistant backend for [Aniket Panchal's Portfolio Website](https://pixelify-porfolio-ts.vercel.app/). It integrates with OpenRouter to power both a context-restricted portfolio chatbot and a general developer assistant.
 
 ---
 
 ## 🚀 Key Features
 
-- **Portfolio AI Assistant (`/api/personalPortfolio/ask/`)**: An AI chatbot that dynamically answers professional queries about Aniket Panchal's work experience, education, certificates, skills, and projects. Its answers are strictly bound to structured JSON portfolio data to prevent hallucination.
-- **Developer Assistant (`/api/ai/ask/`)**: A coding assistant helper designed to analyze, fix, and optimize code while suggesting developer best practices in a structured markdown response format.
+- **Context-aware Portfolio AI (`/api/personalPortfolio/ask/`)**: An AI chatbot that dynamically answers professional queries about Aniket Panchal's work experience, education, certificates, skills, and projects. Its answers are strictly bound to structured JSON portfolio data to prevent hallucination.
+- **Developer Assistant API (`/api/ai/ask/`)**: A coding assistant helper designed to analyze, fix, and optimize code while suggesting developer best practices in a structured markdown response format.
+- **Modular Service Architecture**: Decoupled service layer utilizing OpenRouter APIs, enabling clean service logic separation and easy switching between LLM models (e.g., NVIDIA Nemotron, GPT models).
+- **Prompt Engineering**: Custom system prompts and builders optimized for different AI use cases (developer assistant vs. context-bound portfolio AI).
+- **Dockerized Deployment**: Fully containerized setup, CORS pre-configured, and served with Gunicorn for reliable production deployment.
 - **Status & Health Check (`/api/status/`, `/api/test/`)**: Simple ping/pong endpoints to check service availability.
-- **OpenRouter Integration**: Fully decoupled service architecture utilizing OpenRouter APIs, enabling easy switching between LLM models (e.g., NVIDIA Nemotron, GPT models).
-- **Production Ready**: Dockerized setup, CORS pre-configured, and served with Gunicorn for reliable deployment.
 
 ---
 
@@ -187,3 +188,13 @@ The portfolio assistant uses a dedicated system prompt configuration to guarante
 1.  **Context-Bound**: The chatbot answers _only_ using details present in the fetched portfolio schema (Gist / Cache).
 2.  **No Hallucinations**: It does not invent skills, experience, or certifications. If information is missing, it responds: `"That information is not available in the portfolio."`
 3.  **Domain Restriction**: Questions unrelated to Aniket's profile will be politely deflected with a message indicating the assistant's professional purpose.
+
+---
+
+## 🚧 Roadmap & Future Plans
+
+The project is an active work-in-progress. The next phases of development focus on:
+- ✨ **More AI Endpoints**: Adding dedicated endpoints for other projects and applications under development.
+- 🧠 **Smarter Context Handling**: Improving prompt chaining and memory retention for richer conversational context.
+- 🔌 **Reusable AI Services**: Refactoring the service layer into pluggable modules that can easily be integrated into future applications.
+- 🔒 **Security Hardening**: Enhancing authentication, rate limiting, and input validation prior to public release.
